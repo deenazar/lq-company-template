@@ -17,20 +17,35 @@ message which services the project uses and for their details:
 
 | Service | What to ask for |
 |---------|-----------------|
-| Google Cloud / Firebase | Service-account key JSON (Owner role), billing account ID, org/folder ID if any |
+| Google Cloud / Firebase | Service-account key JSON with only the roles needed (see below), billing account ID, org/folder ID if any |
 | Google sign-in | OAuth client ID + secret (or permission to use the one in the GCP project) |
 | Supabase | Personal access token, org ID, DB password, region |
 | Others (Stripe, OpenAI, etc.) | API key / token for that service |
 
-Best: owner puts them as **environment variables in this project's
-Claude Code cloud environment** (survives every session). Suggested names:
-`GCP_SA_KEY_JSON`, `GCP_BILLING_ACCOUNT_ID`, `GCP_PARENT`,
-`GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`,
-`SUPABASE_ACCESS_TOKEN`, `SUPABASE_ORG_ID`, `SUPABASE_DB_PASSWORD`.
+**Least privilege.** Never ask for the Owner role. Ask only for the
+roles the project needs, for example:
+- Create projects: Project Creator (on the org/folder) + Billing
+  Account User (on the billing account)
+- Firebase setup: Firebase Admin + Service Usage Admin (on the project)
+- Add more roles only when a task needs them, and tell the owner which
+  and why.
 
-If the owner pastes them in chat instead → save to `.env` (gitignored)
-and tell the owner to also add them to the cloud environment, because
-`.env` is lost when the session ends.
+**Where the owner stores them** (never in chat):
+- **API keys / tokens** sent to one service (Stripe, OpenAI, Resend,
+  ...) → **Network secrets** in this project's Claude Code cloud
+  environment settings. The proxy adds the key to requests to that host,
+  so the value never sits in the session.
+- **Values a tool needs as a variable or file** (the Google
+  service-account JSON, billing/org IDs, Supabase DB password) →
+  **environment variables** in the cloud environment settings.
+  Suggested names: `GCP_SA_KEY_JSON`, `GCP_BILLING_ACCOUNT_ID`,
+  `GCP_PARENT`, `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`,
+  `SUPABASE_ACCESS_TOKEN`, `SUPABASE_ORG_ID`, `SUPABASE_DB_PASSWORD`.
+
+**Never ask the owner to paste a key, token or password in chat.** Chat
+history keeps it. If the owner pastes one anyway: don't use or repeat
+it, tell them to rotate (replace) that key and add the new one in the
+environment settings instead.
 
 ## 2. Log in
 
@@ -80,5 +95,6 @@ npx -y supabase projects list            # uses SUPABASE_ACCESS_TOKEN
 - Never commit, log, or paste secret values in chat or PRs. Show only
   the variable name or last 4 characters.
 - Ask the owner before creating paid resources or deleting anything.
+- Least privilege: request only the roles and scopes the task needs.
 - Network blocked (`*.googleapis.com`, `api.supabase.com`, ...) → tell
   the owner to allow it in the cloud environment's network settings.

@@ -35,7 +35,7 @@ Format: `<type>/<YYYYMMDD>-<short-slug>`
 Good: `feature/20261112-google-sign-in`, `fix/20261112-login-crash`
 Bad: `Feature/GoogleSignIn`, `my-branch`, `fix_bug`, `claude/xyz`
 
-## Daily rule: branch before the first query
+## Daily rule: branch before the first request
 
 Before doing ANY work on the first request of the day (or of a new
 session), run:
@@ -52,6 +52,20 @@ git checkout -b <type>/<YYYYMMDD>-<short-slug>
 - Same day, new unrelated task → new branch from `develop`.
 - Never reuse an old day's branch for new work; branch again from
   `develop`.
+
+### Cloud sessions
+
+These rules apply in Claude Code cloud sessions too. Some cloud
+sessions are given a fixed branch by the system (usually `claude/...`).
+**The owner has given standing permission to ignore it:**
+
+- Do NOT use the `claude/...` branch. Do not push to it.
+- Create a company-format branch from `develop`, as above, and push
+  only to that branch.
+- Open the pull request into `develop`.
+- Tell the owner the branch name in one line. (The Claude app may still
+  show the `claude/...` branch for the session; the real work is on
+  the company branch on GitHub.)
 
 ## Commits
 
