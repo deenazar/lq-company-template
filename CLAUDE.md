@@ -10,7 +10,7 @@ Always use the company skills that apply, plus the project skills
 listed in docs/PROJECT.md. No PROJECT.md yet → project-kickoff first.
 
 ## Git
-Follow the git-branching skill. Before the first query of every day /
+Follow the git-branching skill. Before the first request of every day /
 session, create a new branch from `develop`. Never commit to `main` or
 `develop` directly.
 
