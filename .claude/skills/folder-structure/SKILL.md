@@ -25,3 +25,4 @@ docs/                     PROJECT.md, DECISIONS.md
 - Tests live next to the file as `*.test.ts(x)`.
 - No file over 200 lines.
 - No barrel files, except `components/ui/index.ts`.
+- shadcn components live in `src/components/ui/`.
